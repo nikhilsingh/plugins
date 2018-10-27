@@ -167,7 +167,7 @@ class Query {
   /// documentSnapshot must be in order of [orderBy] filters.
   ///
   /// Cannot be used in combination with [startAtDocument], [startAt].
-  Query startAfterDocument(DocumentSnapshot documentSnapshot) {
+  Query startAfterDocument(dynamic documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!_parameters.containsKey('startAfter'));
     assert(!_parameters.containsKey('startAt'));
@@ -182,7 +182,7 @@ class Query {
   /// documentSnapshot must be in order of [orderBy] filters.
   ///
   /// Cannot be used in combination with [startAfterDocument], [startAfter].
-  Query startAtDocument(DocumentSnapshot documentSnapshot) {
+  Query startAtDocument(dynamic documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!_parameters.containsKey('startAfter'));
     assert(!_parameters.containsKey('startAt'));
@@ -227,7 +227,7 @@ class Query {
   /// The [values] must be in order of [orderBy] filters.
   ///
   /// Cannot be used in combination with [endBefore], [endBeforeDocument].
-  Query endAtDocument(DocumentSnapshot documentSnapshot) {
+  Query endAtDocument(dynamic documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!_parameters.containsKey('endBefore'));
     assert(!_parameters.containsKey('endAt'));
@@ -257,7 +257,7 @@ class Query {
   /// The [values] must be in order of [orderBy] filters.
   ///
   /// Cannot be used in combination with [endAt], [endAtDocument].
-  Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  Query endBeforeDocument(dynamic documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!_parameters.containsKey('endBefore'));
     assert(!_parameters.containsKey('endAt'));
