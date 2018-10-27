@@ -161,6 +161,36 @@ class Query {
     return _copyWithParameters(<String, dynamic>{'orderBy': orders});
   }
 
+  /// Takes a documentSnapshot, creates and returns a new [Query] that starts after
+  /// the provided document reference to the order of the query.
+  ///
+  /// documentSnapshot must be in order of [orderBy] filters.
+  ///
+  /// Cannot be used in combination with [startAtDocument], [startAt].
+  Query startAfterDocument(DocumentSnapshot documentSnapshot) {
+    assert(documentSnapshot != null);
+    assert(!_parameters.containsKey('startAfter'));
+    assert(!_parameters.containsKey('startAt'));
+    assert(!_parameters.containsKey('startAfterDocument'));
+    assert(!_parameters.containsKey('startAtDocument'));
+    return _copyWithParameters(<String, dynamic>{'startAfterDocument': documentSnapshot});
+  }
+
+  /// Takes a documentSnapshot, creates and returns a new [Query] that starts after
+  /// the provided document reference to the order of the query.
+  ///
+  /// documentSnapshot must be in order of [orderBy] filters.
+  ///
+  /// Cannot be used in combination with [startAfterDocument], [startAfter].
+  Query startAtDocument(DocumentSnapshot documentSnapshot) {
+    assert(documentSnapshot != null);
+    assert(!_parameters.containsKey('startAfter'));
+    assert(!_parameters.containsKey('startAt'));
+    assert(!_parameters.containsKey('startAfterDocument'));
+    assert(!_parameters.containsKey('startAtDocument'));
+    return _copyWithParameters(<String, dynamic>{'startAtDocument': documentSnapshot});
+  }
+
   /// Takes a list of [values], creates and returns a new [Query] that starts after
   /// the provided fields relative to the order of the query.
   ///
@@ -171,6 +201,8 @@ class Query {
     assert(values != null);
     assert(!_parameters.containsKey('startAfter'));
     assert(!_parameters.containsKey('startAt'));
+    assert(!_parameters.containsKey('startAfterDocument'));
+    assert(!_parameters.containsKey('startAtDocument'));
     return _copyWithParameters(<String, dynamic>{'startAfter': values});
   }
 
@@ -184,7 +216,24 @@ class Query {
     assert(values != null);
     assert(!_parameters.containsKey('startAfter'));
     assert(!_parameters.containsKey('startAt'));
+    assert(!_parameters.containsKey('startAfterDocument'));
+    assert(!_parameters.containsKey('startAtDocument'));
     return _copyWithParameters(<String, dynamic>{'startAt': values});
+  }
+
+  /// Takes a Document Snapshot, creates and returns a new [Query] that ends at the
+  /// provided document reference to the order of the query.
+  ///
+  /// The [values] must be in order of [orderBy] filters.
+  ///
+  /// Cannot be used in combination with [endBefore], [endBeforeDocument].
+  Query endAtDocument(DocumentSnapshot documentSnapshot) {
+    assert(documentSnapshot != null);
+    assert(!_parameters.containsKey('endBefore'));
+    assert(!_parameters.containsKey('endAt'));
+    assert(!_parameters.containsKey('endBeforeDocument'));
+    assert(!_parameters.containsKey('endAtDocument'));
+    return _copyWithParameters(<String, dynamic>{'endAtDocument': documentSnapshot});
   }
 
   /// Takes a list of [values], creates and returns a new [Query] that ends at the
@@ -197,7 +246,24 @@ class Query {
     assert(values != null);
     assert(!_parameters.containsKey('endBefore'));
     assert(!_parameters.containsKey('endAt'));
+    assert(!_parameters.containsKey('endBeforeDocument'));
+    assert(!_parameters.containsKey('endAtDocument'));
     return _copyWithParameters(<String, dynamic>{'endAt': values});
+  }
+
+  /// Takes a Document Snapshot, creates and returns a new [Query] that ends before
+  /// the provided document reference to the order of the query.
+  ///
+  /// The [values] must be in order of [orderBy] filters.
+  ///
+  /// Cannot be used in combination with [endAt], [endAtDocument].
+  Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
+    assert(documentSnapshot != null);
+    assert(!_parameters.containsKey('endBefore'));
+    assert(!_parameters.containsKey('endAt'));
+    assert(!_parameters.containsKey('endBeforeDocument'));
+    assert(!_parameters.containsKey('endAtDocument'));
+    return _copyWithParameters(<String, dynamic>{'endBeforeDocument': documentSnapshot});
   }
 
   /// Takes a list of [values], creates and returns a new [Query] that ends before
@@ -210,6 +276,8 @@ class Query {
     assert(values != null);
     assert(!_parameters.containsKey('endBefore'));
     assert(!_parameters.containsKey('endAt'));
+    assert(!_parameters.containsKey('endBeforeDocument'));
+    assert(!_parameters.containsKey('endAtDocument'));
     return _copyWithParameters(<String, dynamic>{'endBefore': values});
   }
 
