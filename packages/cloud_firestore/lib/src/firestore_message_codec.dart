@@ -17,6 +17,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   static const int _kDelete = 134;
   static const int _kServerTimestamp = 135;
   static const int _kTimestamp = 136;
+  static const int _kDocumentSnapshot = 136;
 
   static const Map<FieldValueType, int> _kFieldValueCodes =
       <FieldValueType, int>{
@@ -47,7 +48,19 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       final List<int> bytes = utf8.encoder.convert(value.path);
       writeSize(buffer, bytes.length);
       buffer.putUint8List(bytes);
-    } else if (value is Blob) {
+    } else if (value is DocumentSnapshot) {
+      buffer.putUint8(_kDocumentSnapshot);
+      final List<int> appName = utf8.encoder.convert(value._firestore.app.name);
+      writeSize(buffer, appName.length);
+      buffer.putUint8List(appName);
+      final List<int> bytes = utf8.encoder.convert(value._path);
+      writeSize(buffer, bytes.length);
+      buffer.putUint8List(bytes);
+//      final List<int> dataBytes = utf8.encoder.convert(json.encode(value.data));
+//      writeSize(buffer, dataBytes.length);
+//      buffer.putUint8List(dataBytes);
+    } 
+    else if (value is Blob) {
       buffer.putUint8(_kBlob);
       writeSize(buffer, value.bytes.length);
       buffer.putUint8List(value.bytes);
@@ -80,6 +93,19 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         final String path =
             utf8.decoder.convert(buffer.getUint8List(pathLength));
         return firestore.document(path);
+        case _kDocumentSnapshot:
+          final int appNameLength = readSize(buffer);
+          final String appName =
+          utf8.decoder.convert(buffer.getUint8List(appNameLength));
+          final FirebaseApp app = FirebaseApp(name: appName);
+          final Firestore firestore = Firestore(app: app);
+          final int pathLength = readSize(buffer);
+          final String path =
+          utf8.decoder.convert(buffer.getUint8List(pathLength));
+         // final int dataLength = readSize(buffer);
+         // final String jsonData = utf8.decoder.convert(buffer.getUint8List(dataLength));
+        DocumentSnapshot documentSnapshot = new DocumentSnapshot._(path, new Map<String, dynamic>(), firestore);
+        return documentSnapshot;
       case _kBlob:
         final int length = readSize(buffer);
         final List<int> bytes = buffer.getUint8List(length);

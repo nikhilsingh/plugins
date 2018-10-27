@@ -69,6 +69,7 @@ FIRQuery *getQuery(NSDictionary *arguments) {
     
     id startAtDocument = parameters[@"startAtDocument"];
     if (startAtDocument) {
+        [FIRDocumentSnapshot snapsho]
         query = [query queryStartingAtDocument:startAtDocument];
     }
     id startAfterDocument = parameters[@"startAfterDocument"];
@@ -87,6 +88,7 @@ FIRQuery *getQuery(NSDictionary *arguments) {
     }
     id endAtDocument = parameters[@"endAtDocument"];
     if (endAtDocument) {
+        
         query = [query queryEndingAtValues:endAtDocument];
     }
     id endBeforeDocument = parameters[@"endBeforeDocument"];
@@ -151,6 +153,7 @@ const UInt8 ARRAY_REMOVE = 133;
 const UInt8 DELETE = 134;
 const UInt8 SERVER_TIMESTAMP = 135;
 const UInt8 TIMESTAMP = 136;
+const UInt8 DOCUMENT_SNAPSHOT = 137;
 
 @interface FirestoreWriter : FlutterStandardWriter
 - (void)writeValue:(id)value;
@@ -185,7 +188,13 @@ const UInt8 TIMESTAMP = 136;
         [self writeByte:DOCUMENT_REFERENCE];
         [self writeUTF8:document.firestore.app.name];
         [self writeUTF8:documentPath];
-    } else if ([value isKindOfClass:[NSData class]]) {
+    } else if ([value isKindOfClass:[FIRDocumentSnapshot class]]) {
+        FIRDocumentSnapshot *snapshot = value;
+        NSString *documentPath = [[snapshot reference] path];
+        [self writeByte:DOCUMENT_SNAPSHOT];
+        [self writeUTF8:snapshot.reference.firestore.app.name];
+        [self writeUTF8:documentPath];
+    }else if ([value isKindOfClass:[NSData class]]) {
         NSData *blob = value;
         [self writeByte:BLOB];
         [self writeSize:blob.length];
