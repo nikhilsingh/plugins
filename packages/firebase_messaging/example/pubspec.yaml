@@ -7,6 +7,8 @@ dependencies:
   firebase_messaging:
     path: ../
   firebase_core: ^0.2.5+1
+  flutter_local_notifications:
+        git: https://github.com/radvansky-tomas/flutter_local_notifications.git
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
