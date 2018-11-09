@@ -27,6 +27,7 @@ FIRDocumentReference *getDocumentReference(NSDictionary *arguments) {
     return [getFirestore(arguments) documentWithPath:arguments[@"path"]];
 }
 
+
 FIRQuery *getQuery(NSDictionary *arguments) {
     FIRQuery *query = [getFirestore(arguments) collectionWithPath:arguments[@"path"]];
     NSDictionary *parameters = arguments[@"parameters"];
@@ -69,7 +70,6 @@ FIRQuery *getQuery(NSDictionary *arguments) {
     
     id startAtDocument = parameters[@"startAtDocument"];
     if (startAtDocument) {
-        [FIRDocumentSnapshot snapsho]
         query = [query queryStartingAtDocument:startAtDocument];
     }
     id startAfterDocument = parameters[@"startAfterDocument"];
@@ -210,6 +210,8 @@ const UInt8 DOCUMENT_SNAPSHOT = 137;
 @end
 
 @implementation FirestoreReader
+
+
 - (id)readValueOfType:(UInt8)type {
     switch (type) {
         case DATE_TIME: {
@@ -238,6 +240,15 @@ const UInt8 DOCUMENT_SNAPSHOT = 137;
             FIRFirestore *firestore = [FIRFirestore firestoreForApp:[FIRApp appNamed:appName]];
             NSString *documentPath = [self readUTF8];
             return [firestore documentWithPath:documentPath];
+        }
+        case DOCUMENT_SNAPSHOT: {
+            NSString *appName = [self readUTF8];
+            FIRFirestore *firestore = [FIRFirestore firestoreForApp:[FIRApp appNamed:appName]];
+            NSString *documentPath = [self readUTF8];
+            FIRDocumentSnapshot *newSnapshot = [[FIRDocumentSnapshot alloc] init];
+            
+         
+            return newSnapshot;
         }
         case BLOB: {
             UInt32 elementCount = [self readSize];

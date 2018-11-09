@@ -297,6 +297,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (bool)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+//    [self selec]
+//    [self performSelector:NSSelectorFromString(@"registerWithRegistry") withObject:self];
+//    [GeneratedPluginRegistrant registerWithRegistry:self];
     if (initialized) {
       [self sendMessageEvent:userInfo eventType:_kRemoteEvent];
     } else {

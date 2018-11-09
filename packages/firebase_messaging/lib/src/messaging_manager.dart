@@ -62,13 +62,16 @@ class MessagingManager {
   MethodChannel('plugins.flutter.io/firebase_messaging_background');
 
   /// Initialize the plugin and request relevant permissions from the user.
-  static Future<void> initialize(IosNotificationSettings iOSSetting, void Function(FirebaseMessage msg, MessageEvent event)
+  static Future<void> initialize(IosNotificationSettings iOSSetting, dynamic Function(FirebaseMessage msg, MessageEvent event)
   msgCallback) async {
     final CallbackHandle callback =
     PluginUtilities.getCallbackHandle(callbackDispatcher);
 
+    final CallbackHandle msgCallbackH =
+    PluginUtilities.getCallbackHandle(msgCallback);
+
     await _channel.invokeMethod('FirebaseMessaging.initializeService',
-        <dynamic>[callback.toRawHandle(),PluginUtilities.getCallbackHandle(msgCallback).toRawHandle(),iOSSetting.toMap()]);
+        <dynamic>[callback.toRawHandle(),msgCallbackH.toRawHandle(),iOSSetting.toMap()]);
   }
 
   final StreamController<IosNotificationSettings> _iosSettingsStreamController =

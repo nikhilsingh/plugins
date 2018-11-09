@@ -8,9 +8,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-void main() => runApp(MyApp());
+void callback(FirebaseMessage m, MessageEvent e) async {
+  print('Message $m Event: $e');
+  final SendPort send =
+  IsolateNameServer.lookupPortByName('messaging_send_port');
+  send?.send(e.toString());
+}
+
 
 class MyApp extends StatefulWidget {
   @override
@@ -43,27 +48,6 @@ class _MyAppState extends State<MyApp> {
 
   }
 
-  static void callback(FirebaseMessage m, MessageEvent e) async {
-    print('Message $m Event: $e');
-    final SendPort send =
-    IsolateNameServer.lookupPortByName('messaging_send_port');
-    send?.send(e.toString());
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    var initializationSettingsAndroid =
-    new AndroidInitializationSettings('app_icon');
-    var initializationSettingsIOS = new IOSInitializationSettings(registerUNUserNotificationCenterDelegate: false);
-    var initializationSettings = new InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.Max, priority: Priority.High);
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    flutterLocalNotificationsPlugin.show(0, "title", e.toString(),platformChannelSpecifics);
-  }
-
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     print('Initializing...');
@@ -90,14 +74,20 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () =>
                               MessagingManager.deinitMessaging()),
                     )
-              ,
-              Center(
-              child: RaisedButton(
-              child: const Text('Topic'),
-          onPressed: () =>
-              MessagingManager.subscribeToTopic("IlEFVS78rcW8HDASlvzfh0ZXert1"))),
+                    ,
+                    Center(
+                        child: RaisedButton(
+                            child: const Text('Topic'),
+                            onPressed: () =>
+                                MessagingManager.subscribeToTopic("IlEFVS78rcW8HDASlvzfh0ZXert1"))),
 
-        ]))),
+                  ]))),
     );
   }
 }
+
+Future<void> main() async {
+  runApp(MyApp());
+}
+
+

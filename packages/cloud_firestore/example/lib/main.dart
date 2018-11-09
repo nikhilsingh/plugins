@@ -25,22 +25,41 @@ Future<void> main() async {
       title: 'Firestore Example', home: MyHomePage(firestore: firestore)));
 }
 
-class MessageList extends StatelessWidget {
+class MessageList extends StatefulWidget {
   MessageList({this.firestore});
-
   final Firestore firestore;
+
+  @override
+  _MessageListState createState() => _MessageListState();
+}
+
+class _MessageListState extends State<MessageList> {
+
+  DocumentSnapshot lastDocument;
+
+  void _loadMore()
+  {
+    setState(() {
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: firestore.collection('messages').snapshots(),
+      stream: lastDocument != null ? widget.firestore.collection('messages').orderBy("created_at").startAfterDocument(lastDocument).limit(5).snapshots() : widget.firestore.collection('messages').orderBy("created_at").limit(5).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return const Text('Loading...');
-        final int messageCount = snapshot.data.documents.length;
+        final int messageCount = snapshot.data.documents.length + 1;
+        lastDocument = snapshot.data.documents [snapshot.data.documents.length -1];
         return ListView.builder(
           itemCount: messageCount,
           itemBuilder: (_, int index) {
-            final DocumentSnapshot document = snapshot.data.documents[index];
+            if (index == 0)
+              {
+                return new FlatButton(onPressed: () => _loadMore(), child: new Text("Load More"));
+              }
+            final DocumentSnapshot document = snapshot.data.documents[index - 1];
             return ListTile(
               title: Text(document['message'] ?? '<No message retrieved>'),
               subtitle: Text('Message ${index + 1} of $messageCount'),
@@ -68,9 +87,9 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Firestore Example'),
+        title: const Text('Firestore Example')
       ),
-      body: MessageList(firestore: firestore),
+      body: new MessageList(firestore: firestore),
       floatingActionButton: FloatingActionButton(
         onPressed: _addMessage,
         tooltip: 'Increment',
