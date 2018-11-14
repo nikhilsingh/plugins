@@ -147,6 +147,9 @@ static BOOL initialized = NO;
     UIUserNotificationSettings *settings =
     [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+
     result(@(2));
 }
 
