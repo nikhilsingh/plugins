@@ -6,25 +6,11 @@
 #include "GeneratedPluginRegistrant.h"
 
 @implementation AppDelegate
-{
-    BOOL pluginRegistered;
-}
+
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [GeneratedPluginRegistrant registerWithRegistry:self];
-    pluginRegistered = YES;
+    [GeneratedPluginRegistrant registerWithRegistry:self];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
-
-
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo
-fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-        if (pluginRegistered != YES) {
-     [GeneratedPluginRegistrant registerWithRegistry:self];
-        }
-    [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
-}
-
 
 @end
